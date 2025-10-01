@@ -1,7 +1,17 @@
 import React from 'react';
 
-export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
-  const activeTab = tabs.find(tab => tab.id === activeTabId) || tabs[0];
+export const Tabs = ({ tabs = [], activeTabId, onTabSelected }) => {
+  const hasTabs = tabs.length > 0;
+  const activeTab = hasTabs
+    ? tabs.find(tab => tab.id === activeTabId) || tabs[0]
+    : null;
+
+  const handleTabClick = (event, tab) => {
+    event.preventDefault();
+    if (tab.id !== activeTabId) {
+      onTabSelected(tab.id);
+    }
+  };
 
   return (
     <div data-cy="TabsComponent">
@@ -12,14 +22,13 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
             <li
               key={tab.id}
               data-cy="Tab"
-              className={tab.id === activeTab.id ? 'is-active' : ''}
-              onClick={() => {
-                if (tab.id !== activeTab.id) {
-                  onTabSelected(tab.id);
-                }
-              }}
+              className={tab.id === activeTabId ? 'is-active' : ''}
             >
-              <a href={`#${tab.id}`} data-cy="TabLink">
+              <a
+                href={`#tab-${tab.id}`}
+                data-cy="TabLink"
+                onClick={e => handleTabClick(e, tab)}
+              >
                 {tab.title}
               </a>
             </li>
@@ -28,7 +37,7 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
       </div>
 
       <div className="block" data-cy="TabContent">
-        {activeTab.content}
+        {activeTab ? activeTab.content : null}
       </div>
     </div>
   );
