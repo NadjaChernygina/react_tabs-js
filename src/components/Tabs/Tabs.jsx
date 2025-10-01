@@ -2,13 +2,17 @@ import React from 'react';
 
 export const Tabs = ({ tabs = [], activeTabId, onTabSelected }) => {
   const hasTabs = tabs.length > 0;
+
   const activeTab = hasTabs
     ? tabs.find(tab => tab.id === activeTabId) || tabs[0]
     : null;
 
+  const resolvedActiveId = activeTab ? activeTab.id : null;
+
   const handleTabClick = (event, tab) => {
     event.preventDefault();
-    if (tab.id !== activeTabId) {
+
+    if (tab.id !== resolvedActiveId) {
       onTabSelected(tab.id);
     }
   };
